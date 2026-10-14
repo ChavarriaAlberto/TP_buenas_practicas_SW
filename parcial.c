@@ -39,7 +39,14 @@ int main() {
 	return 0;
 }
 
-//MEMORIA DINAMICA
+/**
+* Agrega una nueva maquina al arreglo usando memoria dinamica.
+* @param arreglo Puntero al arreglo de maquinas.
+* @param cantidad Puntero a la variable que guarda la cantidad actual de maquinas.
+* Entrada: Pide al usuario nombre, tension y corriente.
+* Salida: Retorna el puntero al arreglo redimensionado.
+*/
+
 struct Maquina* agregarMaquina(struct Maquina *arreglo, int *cantidad) {
 	// Estiramos la memoria para 1 maquina más
 	arreglo = (struct Maquina *)realloc(arreglo, (*cantidad + 1) * sizeof(struct Maquina));
@@ -62,7 +69,15 @@ struct Maquina* agregarMaquina(struct Maquina *arreglo, int *cantidad) {
 	return arreglo; 
 }
 
-//BUSCAR MAXIMOS 
+
+/**
+* Busca e imprime en pantalla los 2 valores maximos seleccionados.
+* @param arreglo Puntero al arreglo de maquinas.
+* @param cantidad Cantidad total de maquinas registradas.
+* Entrada: Solicita al usuario elegir entre Tension o Corriente.
+* Comportamiento: Compara valores y guarda las posiciones de los mayores.
+*/
+
 void mostrarDosMaximos(struct Maquina *arreglo, int cantidad) {
 	int opcion_var;
 	printf("Buscar por:\n1. Tension\n2. Corriente\nOpcion: ");
@@ -101,7 +116,13 @@ void mostrarDosMaximos(struct Maquina *arreglo, int cantidad) {
 	}
 }
 
-//OPERACIONES CON CADENAS
+/**
+* Muestra el listado de todas las maquinas registradas con sus valores.
+* @param arreglo Puntero al arreglo de maquinas.
+* @param cantidad Cantidad total de maquinas registradas.
+* Comportamiento: Usa strcpy y strcat para formatear el texto antes de imprimir.
+*/
+
 void mostrarCadenas(struct Maquina *arreglo, int cantidad) {
 	for (int i = 0; i < cantidad; i++) {
 		char texto[100]; 
