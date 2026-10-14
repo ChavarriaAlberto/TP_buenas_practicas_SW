@@ -1,70 +1,116 @@
-#include <iostream>
 #include <stdio.h>
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-using namespace std;
-
-struct caract{			//caracteristicas
-	char nombre[50];			//para hacer una lista de los nombres de las máquinas con los valores
-	char NombreMaquina[50];
+#define MAX 50
+struct Maquina{
+	char NombreMaquina[MAX];
 	int Tension;
 	int Corriente;
 };
 
-void agregar_maquina(struct caract *maq, int *cant);
-void valmax(struct caract *maq, int cant);
+struct Maquina* agregarMaquina(struct Maquina *arreglo, int *cantidad);
+void mostrarDosMaximos(struct Maquina *arreglo, int cantidad);
+void mostrarCadenas(struct Maquina *arreglo, int cantidad);
 
-//tengo que agregar una pantalla donde me deje ingresar el nombre del aparato 
-//y los valores de tension y corriente
-int main(int argc, char *argv[]) {
+int main() {
+	struct Maquina *maquinas = NULL; 
+	int cantidad = 0;        
 	int opcion;
-	int cantidad=0;
-	struct caract *maquina;
 	
-	/*int T,I;*/
-	printf("\t Seleccione una opción\n1- Guardar máquina\n2- Mostrar 2 valores de maximos\n");
-	scanf("%d", opcion);
-	
-	do{
-		switch(opcion){
+	do {
+		printf("\n1. Agregar\n2. Mostrar 2 Maximos\n3. Ver todas\n0. Salir\nOpcion: ");
+		scanf("%d", &opcion);
+		
+		switch (opcion) {
 		case 1:
-			agregar_maquina(&maquina, &cantidad);
+			maquinas = agregarMaquina(maquinas, &cantidad);
 			break;
-			
 		case 2:
-			//			printf("Los valores Máximos de tensión y de corriente de la máquina son:\n");
-			//			valmax(maquinas, &cantidad);
+			mostrarDosMaximos(maquinas, cantidad);
 			break;
-			
 		case 3:
-			opcion=3;
+			mostrarCadenas(maquinas, cantidad);
 			break;
-			
-		default:
-			printf("\n¡Opción Incorrecta!");
 		}
-	}while (opcion!=3);
+	} while (opcion != 0);
+	
+	free(maquinas);
 	return 0;
 }
 
-
-void agregar_maquina(struct caract *maq, int *cant){		//para guardar los valores
-	printf("Dar el nombre de la máquina %d: ", (*cant)+1);
-	scanf("%s", &maq[*cant].NombreMaquina);
-	printf("\nIngrese el valor de tensión: ");
-	scanf("%d", &maq[*cant].Tension);
-	printf("\nIngrese el valor de corrietente");
-	scanf("%d", &maq[*cant].Corriente);
+//MEMORIA DINAMICA
+struct Maquina* agregarMaquina(struct Maquina *arreglo, int *cantidad) {
+	// Estiramos la memoria para 1 maquina más
+	arreglo = (struct Maquina *)realloc(arreglo, (*cantidad + 1) * sizeof(struct Maquina));
 	
-	*cant++;		//aumentamos para guardar más variables
+	// Puntero apuntando al espacio nuevo
+	struct Maquina *nueva = (arreglo + *cantidad);
+	
+	printf("Nombre de la maquina: ");
+	getchar();
+	fgets(nueva->NombreMaquina, MAX ,stdin);
+	*(nueva->NombreMaquina + strcspn(nueva->NombreMaquina, "\n")) = '\0';  //elimino el enter
+	
+	printf("Tension: ");
+	scanf("%d", &(nueva->Tension));
+	
+	printf("Corriente: ");
+	scanf("%d", &(nueva->Corriente));
+	
+	(*cantidad)++; // Sumamos 1 al total
+	return arreglo; 
 }
-	
-//void valmax(struct caract *maq,int cant){
-//	if (cant==0){
-//		printf("No hay nada guardado");
-//	}
-//	for(int i=0, i<cantidad_elementos, i++){
-//	
-//	}
-//}
 
+//BUSCAR MAXIMOS 
+void mostrarDosMaximos(struct Maquina *arreglo, int cantidad) {
+	int opcion_var;
+	printf("Buscar por:\n1. Tension\n2. Corriente\nOpcion: ");
+	scanf("%d", &opcion_var);
+	
+	int max1 = 0, max2 = 1; 
+	
+	for (int i = 0; i < cantidad; i++) {
+		int valorActual, valorMax1, valorMax2;
+		
+		if (opcion_var == 1) {
+			valorActual = (arreglo + i)->Tension;
+			valorMax1 = (arreglo + max1)->Tension;
+			valorMax2 = (arreglo + max2)->Tension;
+		} else {
+			valorActual = (arreglo + i)->Corriente;
+			valorMax1 = (arreglo + max1)->Corriente;
+			valorMax2 = (arreglo + max2)->Corriente;
+		}
+		
+		if (valorActual > valorMax1) {
+			max2 = max1; 
+			max1 = i;    
+		} else if (valorActual > valorMax2 && i != max1) {
+			max2 = i;    
+		}
+	}
+	
+	printf("\n-- LOS 2 MAS GRANDES --\n");
+	if (opcion_var == 1) {
+		printf("1. %s (%dV)\n", (arreglo + max1)->NombreMaquina, (arreglo + max1)->Tension);
+		printf("2. %s (%dV)\n", (arreglo + max2)->NombreMaquina, (arreglo + max2)->Tension);
+	} else {
+		printf("1. %s (%dA)\n", (arreglo + max1)->NombreMaquina, (arreglo + max1)->Corriente);
+		printf("2. %s (%dA)\n", (arreglo + max2)->NombreMaquina, (arreglo + max2)->Corriente);
+	}
+}
+
+//OPERACIONES CON CADENAS
+void mostrarCadenas(struct Maquina *arreglo, int cantidad) {
+	for (int i = 0; i < cantidad; i++) {
+		char texto[100]; 
+		strcpy(texto, "Maquina: "); 
+		
+		// CONCATENAR
+		strcat(texto, (arreglo + i)->NombreMaquina);
+		
+		printf("%s | Tension: %d | Corriente: %d\n", 
+			   texto, (arreglo + i)->Tension, (arreglo + i)->Corriente);
+	}
+}
