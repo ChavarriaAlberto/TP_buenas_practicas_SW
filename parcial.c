@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX 50
+#define MAX 50 //macro constante
 struct Maquina{
 	char NombreMaquina[MAX];
 	int Tension;
@@ -32,8 +32,8 @@ int main() {
 		case 3:
 			mostrarCadenas(maquinas, cantidad);
 			break;
-		}
-	} while (opcion != 0);
+		} //switch
+	} while (opcion != 0);	//while
 	
 	free(maquinas);
 	return 0;
@@ -53,7 +53,7 @@ struct Maquina* agregarMaquina(struct Maquina *arreglo, int *cantidad) {
 	if (arreglo == NULL) {
 		printf("Error: No hay memoria suficiente.\n");
 		exit(1);
-	}
+	}	//if
 	// Puntero apuntando al espacio nuevo
 	struct Maquina *nueva = (arreglo + *cantidad);
 	
@@ -99,15 +99,15 @@ void mostrarDosMaximos(struct Maquina *arreglo, int cantidad) {
 			valorActual = (arreglo + i)->Corriente;
 			valorMax1 = (arreglo + max1)->Corriente;
 			valorMax2 = (arreglo + max2)->Corriente;
-		}
+		}//if
 		
 		if (valorActual > valorMax1) {
 			max2 = max1; 
 			max1 = i;    
 		} else if (valorActual > valorMax2 && i != max1) {
 			max2 = i;    
-		}
-	}
+		}//if
+	} //for
 	
 	printf("\n-- LOS 2 MAS GRANDES --\n");
 	if (opcion_var == 1) {
@@ -116,7 +116,7 @@ void mostrarDosMaximos(struct Maquina *arreglo, int cantidad) {
 	} else {
 		printf("1. %s (%dA)\n", (arreglo + max1)->NombreMaquina, (arreglo + max1)->Corriente);
 		printf("2. %s (%dA)\n", (arreglo + max2)->NombreMaquina, (arreglo + max2)->Corriente);
-	}
+	}//if
 }
 
 /**
@@ -135,6 +135,6 @@ void mostrarCadenas(struct Maquina *arreglo, int cantidad) {
 		strcat(texto, (arreglo + i)->NombreMaquina);
 		
 		printf("%s | Tension: %d | Corriente: %d\n", 
-			   texto, (arreglo + i)->Tension, (arreglo + i)->Corriente);
-	}
+			texto, (arreglo + i)->Tension, (arreglo + i)->Corriente);
+	}//for
 }
