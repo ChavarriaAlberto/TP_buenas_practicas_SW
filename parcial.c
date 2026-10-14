@@ -50,7 +50,10 @@ int main() {
 struct Maquina* agregarMaquina(struct Maquina *arreglo, int *cantidad) {
 	// Estiramos la memoria para 1 maquina más
 	arreglo = (struct Maquina *)realloc(arreglo, (*cantidad + 1) * sizeof(struct Maquina));
-	
+	if (arreglo == NULL) {
+		printf("Error: No hay memoria suficiente.\n");
+		exit(1);
+	}
 	// Puntero apuntando al espacio nuevo
 	struct Maquina *nueva = (arreglo + *cantidad);
 	
